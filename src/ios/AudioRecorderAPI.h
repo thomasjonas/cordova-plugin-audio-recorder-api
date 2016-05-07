@@ -2,12 +2,17 @@
 #import <AVFoundation/AVFoundation.h>
 
 @interface AudioRecorderAPI : CDVPlugin {
-  NSString *recorderFilePath;
-  NSNumber *duration;
-  AVAudioRecorder *recorder;
-  AVAudioPlayer *player;
-  CDVPluginResult *pluginResult;
-  CDVInvokedUrlCommand *_command;
+    NSString *recorderFilePath;
+    NSNumber *duration;
+    NSNumber *sampleRate;
+    NSNumber *bitRate;
+    NSNumber *numberOfChannels;
+    NSNumber *audioQuality;
+    
+    AVAudioRecorder *recorder;
+    AVAudioPlayer *player;
+    CDVPluginResult *pluginResult;
+    CDVInvokedUrlCommand *_command;
 }
 
 - (void)record:(CDVInvokedUrlCommand*)command;

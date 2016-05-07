@@ -3,16 +3,33 @@
 
 @implementation AudioRecorderAPI
 
-#define RECORDINGS_FOLDER [NSHomeDirectory() stringByAppendingPathComponent:@"Library/NoCloud"]
+#define RECORDINGS_FOLDER [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"]
 
 - (void)record:(CDVInvokedUrlCommand*)command {
   _command = command;
   duration = [_command.arguments objectAtIndex:0];
-
+  sampleRate = [_command.arguments objectAtIndex:1];
+  bitRate = [_command.arguments objectAtIndex:2];
+  bitDepth = [_command.arguments objectAtIndex:3];
+  numberOfChannels = [_command.arguments objectAtIndex:4];
+  
+  NSString audioQualityString = [_command.arguments objectAtIndex:5];
+  if ([audioQualityString isEqualToString:@"min"]) {
+    audioQuality = AVAudioQualityMin;
+  } else if ([audioQualityString isEqualToString:@"low"]) {
+    audioQuality = AVAudioQualityLow;
+  } else if ([audioQualityString isEqualToString:@"medium"]) {
+    audioQuality = AVAudioQualityMedium;
+  } else if ([audioQualityString isEqualToString:@"high"]) {
+    audioQuality = AVAudioQualityHigh;
+  } else if ([audioQualityString isEqualToString:@"max"]) {
+    audioQuality = AVAudioQualityMax;
+  }
+  
   [self.commandDelegate runInBackground:^{
-
+    
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-
+    
     NSError *err;
     [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:&err];
     if (err)
@@ -25,20 +42,20 @@
     {
       NSLog(@"%@ %d %@", [err domain], [err code], [[err userInfo] description]);
     }
-
+    
     NSMutableDictionary *recordSettings = [[NSMutableDictionary alloc] init];
     [recordSettings setObject:[NSNumber numberWithInt: kAudioFormatMPEG4AAC] forKey: AVFormatIDKey];
-    [recordSettings setObject:[NSNumber numberWithFloat:8000.0] forKey: AVSampleRateKey];
-    [recordSettings setObject:[NSNumber numberWithInt:1] forKey:AVNumberOfChannelsKey];
-    [recordSettings setObject:[NSNumber numberWithInt:12000] forKey:AVEncoderBitRateKey];
-    [recordSettings setObject:[NSNumber numberWithInt:8] forKey:AVLinearPCMBitDepthKey];
-    [recordSettings setObject:[NSNumber numberWithInt: AVAudioQualityLow] forKey: AVEncoderAudioQualityKey];
-
+    [recordSettings setObject:[NSNumber numberWithFloat:sampleRate] forKey: AVSampleRateKey];
+    [recordSettings setObject:[NSNumber numberWithInt:numberOfChannels] forKey:AVNumberOfChannelsKey];
+    [recordSettings setObject:[NSNumber numberWithInt:bitRate] forKey:AVEncoderBitRateKey];
+    [recordSettings setObject:[NSNumber numberWithInt:bitDepth] forKey:AVLinearPCMBitDepthKey];
+    [recordSettings setObject:[NSNumber numberWithInt: audioQuality] forKey: AVEncoderAudioQualityKey];
+    
     // Create a new dated file
     NSString *uuid = [[NSUUID UUID] UUIDString];
     recorderFilePath = [NSString stringWithFormat:@"%@/%@.m4a", RECORDINGS_FOLDER, uuid];
     NSLog(@"recording file path: %@", recorderFilePath);
-
+    
     NSURL *url = [NSURL fileURLWithPath:recorderFilePath];
     err = nil;
     recorder = [[AVAudioRecorder alloc] initWithURL:url settings:recordSettings error:&err];
@@ -46,19 +63,19 @@
       NSLog(@"recorder: %@ %d %@", [err domain], [err code], [[err userInfo] description]);
       return;
     }
-
+    
     [recorder setDelegate:self];
-
+    
     if (![recorder prepareToRecord]) {
       NSLog(@"prepareToRecord failed");
       return;
     }
-
+    
     if (![recorder recordForDuration:(NSTimeInterval)[duration intValue]]) {
       NSLog(@"recordForDuration failed");
       return;
     }
-
+    
   }];
 }
 
