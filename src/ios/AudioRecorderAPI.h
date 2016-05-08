@@ -6,8 +6,9 @@
     NSNumber *duration;
     NSNumber *sampleRate;
     NSNumber *bitRate;
-    NSNumber *numberOfChannels;
-    NSNumber *audioQuality;
+    NSNumber *bitDepth;
+    int numberOfChannels;
+    int audioQuality;
     
     AVAudioRecorder *recorder;
     AVAudioPlayer *player;

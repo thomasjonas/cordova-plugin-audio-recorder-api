@@ -11,9 +11,9 @@
   sampleRate = [_command.arguments objectAtIndex:1];
   bitRate = [_command.arguments objectAtIndex:2];
   bitDepth = [_command.arguments objectAtIndex:3];
-  numberOfChannels = [_command.arguments objectAtIndex:4];
+  numberOfChannels = [[_command.arguments objectAtIndex:4] intValue];
   
-  NSString audioQualityString = [_command.arguments objectAtIndex:5];
+  NSString *audioQualityString = [_command.arguments objectAtIndex:5];
   if ([audioQualityString isEqualToString:@"min"]) {
     audioQuality = AVAudioQualityMin;
   } else if ([audioQualityString isEqualToString:@"low"]) {
@@ -45,10 +45,10 @@
     
     NSMutableDictionary *recordSettings = [[NSMutableDictionary alloc] init];
     [recordSettings setObject:[NSNumber numberWithInt: kAudioFormatMPEG4AAC] forKey: AVFormatIDKey];
-    [recordSettings setObject:[NSNumber numberWithFloat:sampleRate] forKey: AVSampleRateKey];
+    [recordSettings setObject:[NSNumber numberWithFloat:[sampleRate floatValue]] forKey: AVSampleRateKey];
     [recordSettings setObject:[NSNumber numberWithInt:numberOfChannels] forKey:AVNumberOfChannelsKey];
-    [recordSettings setObject:[NSNumber numberWithInt:bitRate] forKey:AVEncoderBitRateKey];
-    [recordSettings setObject:[NSNumber numberWithInt:bitDepth] forKey:AVLinearPCMBitDepthKey];
+    [recordSettings setObject:[NSNumber numberWithInt:[bitRate intValue]] forKey:AVEncoderBitRateKey];
+    [recordSettings setObject:[NSNumber numberWithInt:[bitDepth intValue]] forKey:AVLinearPCMBitDepthKey];
     [recordSettings setObject:[NSNumber numberWithInt: audioQuality] forKey: AVEncoderAudioQualityKey];
     
     // Create a new dated file
