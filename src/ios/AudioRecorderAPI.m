@@ -42,15 +42,27 @@
     {
       NSLog(@"%@ %d %@", [err domain], [err code], [[err userInfo] description]);
     }
-
-    NSDictionary *recordSettings = @{AVEncoderAudioQualityKey: @(AVAudioQualityHigh),
+      
+  // Create a new dated file
+  NSString *uuid = [[NSUUID UUID] UUIDString];
+      
+    // wav
+//    recorderFilePath = [NSString stringWithFormat:@"%@/%@.wav", RECORDINGS_FOLDER, uuid];
+//    NSDictionary *recordSettings = @{AVEncoderAudioQualityKey: @(AVAudioQualityMax),
+//                                       AVFormatIDKey: @(kAudioFormatLinearPCM),
+//                                       AVNumberOfChannelsKey: @(1),
+//                                       AVLinearPCMBitDepthKey: @(16)};
+      
+      // m4a, as highest bitrate possible...
+      recorderFilePath = [NSString stringWithFormat:@"%@/%@.m4a", RECORDINGS_FOLDER, uuid];
+      NSDictionary *recordSettings = @{AVEncoderAudioQualityKey: @(AVAudioQualityMax),
                                        AVFormatIDKey: @(kAudioFormatMPEG4AAC),
-                                       AVEncoderBitRateKey: @(192000),
+                                       AVEncoderBitRateKey: @(128000),
                                        AVNumberOfChannelsKey: @(1),
                                        AVSampleRateKey: @(44100),
-                                       AVLinearPCMBitDepthKey: @(16)};
+                                       AVLinearPCMBitDepthKey: @(24)};
     
-    // NSMutableDictionary *recordSettings = [[NSMutableDictionary alloc] init];
+      // NSMutableDictionary *recordSettings = [[NSMutableDictionary alloc] init];
     // [recordSettings setObject:[NSNumber numberWithInt: kAudioFormatMPEG4AAC] forKey: AVFormatIDKey];
     // [recordSettings setObject:[NSNumber numberWithFloat:[sampleRate floatValue]] forKey: AVSampleRateKey];
     // [recordSettings setObject:[NSNumber numberWithInt:numberOfChannels] forKey:AVNumberOfChannelsKey];
@@ -58,9 +70,8 @@
     // [recordSettings setObject:[NSNumber numberWithInt:[bitDepth intValue]] forKey:AVLinearPCMBitDepthKey];
     // [recordSettings setObject:[NSNumber numberWithInt: audioQuality] forKey: AVEncoderAudioQualityKey];
     
-    // Create a new dated file
-    NSString *uuid = [[NSUUID UUID] UUIDString];
-    recorderFilePath = [NSString stringWithFormat:@"%@/%@.m4a", RECORDINGS_FOLDER, uuid];
+    
+    
     NSLog(@"recording file path: %@", recorderFilePath);
     
     NSURL *url = [NSURL fileURLWithPath:recorderFilePath];
