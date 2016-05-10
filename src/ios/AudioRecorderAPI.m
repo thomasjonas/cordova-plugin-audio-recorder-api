@@ -42,14 +42,21 @@
     {
       NSLog(@"%@ %d %@", [err domain], [err code], [[err userInfo] description]);
     }
+
+    NSDictionary *recordSettings = @{AVEncoderAudioQualityKey: @(AVAudioQualityHigh),
+                                       AVFormatIDKey: @(kAudioFormatMPEG4AAC),
+                                       AVEncoderBitRateKey: @(192000),
+                                       AVNumberOfChannelsKey: @(1),
+                                       AVSampleRateKey: @(44100),
+                                       AVLinearPCMBitDepthKey: @(16)};
     
-    NSMutableDictionary *recordSettings = [[NSMutableDictionary alloc] init];
-    [recordSettings setObject:[NSNumber numberWithInt: kAudioFormatMPEG4AAC] forKey: AVFormatIDKey];
-    [recordSettings setObject:[NSNumber numberWithFloat:[sampleRate floatValue]] forKey: AVSampleRateKey];
-    [recordSettings setObject:[NSNumber numberWithInt:numberOfChannels] forKey:AVNumberOfChannelsKey];
-    [recordSettings setObject:[NSNumber numberWithInt:[bitRate intValue]] forKey:AVEncoderBitRateKey];
-    [recordSettings setObject:[NSNumber numberWithInt:[bitDepth intValue]] forKey:AVLinearPCMBitDepthKey];
-    [recordSettings setObject:[NSNumber numberWithInt: audioQuality] forKey: AVEncoderAudioQualityKey];
+    // NSMutableDictionary *recordSettings = [[NSMutableDictionary alloc] init];
+    // [recordSettings setObject:[NSNumber numberWithInt: kAudioFormatMPEG4AAC] forKey: AVFormatIDKey];
+    // [recordSettings setObject:[NSNumber numberWithFloat:[sampleRate floatValue]] forKey: AVSampleRateKey];
+    // [recordSettings setObject:[NSNumber numberWithInt:numberOfChannels] forKey:AVNumberOfChannelsKey];
+    // [recordSettings setObject:[NSNumber numberWithInt:[bitRate intValue]] forKey:AVEncoderBitRateKey];
+    // [recordSettings setObject:[NSNumber numberWithInt:[bitDepth intValue]] forKey:AVLinearPCMBitDepthKey];
+    // [recordSettings setObject:[NSNumber numberWithInt: audioQuality] forKey: AVEncoderAudioQualityKey];
     
     // Create a new dated file
     NSString *uuid = [[NSUUID UUID] UUIDString];
